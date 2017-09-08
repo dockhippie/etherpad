@@ -2,13 +2,13 @@
 
 if [ -z "${ETHERPAD_ADMIN_PASSWORD}" ]
 then
-  ETHERPAD_ADMIN_PASSWORD=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
+  ETHERPAD_ADMIN_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20 ; echo '')
   echo >&2 "Warning: ETHERPAD_ADMIN_PASSWORD is not defined, set to '${ETHERPAD_ADMIN_PASSWORD}'"
 fi
 
 if [ -z "${ETHERPAD_USER_PASSWORD}" ]
 then
-  ETHERPAD_USER_PASSWORD=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
+  ETHERPAD_USER_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20 ; echo '')
   echo >&2 "Warning: ETHERPAD_USER_PASSWORD is not defined, set to '${ETHERPAD_USER_PASSWORD}'"
 fi
 
