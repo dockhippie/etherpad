@@ -1,8 +1,16 @@
 #!/bin/bash
-source /usr/bin/entrypoint
 
-echo "> chown etherpad home"
-find /var/lib/etherpad \( \! -user etherpad -o \! -group etherpad \) -print0 | xargs -0 -r chown etherpad:etherpad
+if [ -z "${ETHERPAD_ADMIN_PASSWORD}" ]
+then
+  ETHERPAD_ADMIN_PASSWORD=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
+  echo >&2 "Warning: ETHERPAD_ADMIN_PASSWORD is not defined, set to '${ETHERPAD_ADMIN_PASSWORD}'"
+fi
+
+if [ -z "${ETHERPAD_USER_PASSWORD}" ]
+then
+  ETHERPAD_USER_PASSWORD=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
+  echo >&2 "Warning: ETHERPAD_USER_PASSWORD is not defined, set to '${ETHERPAD_USER_PASSWORD}'"
+fi
 
 case "${ETHERPAD_DB_TYPE}" in
   "sqlite")
@@ -52,39 +60,3 @@ case "${ETHERPAD_DB_TYPE}" in
     fi
     ;;
 esac
-
-echo "> writing etherpad config"
-/usr/bin/templater -d -p etherpad -o /srv/www/settings.json /etc/templates/settings.tmpl
-
-if [[ $? -ne 0 ]]
-then
-  /bin/s6-svscanctl -t /etc/s6
-  exit 1
-fi
-
-echo "> creating node_modules dir"
-mkdir -p /var/lib/etherpad/node_modules
-
-echo "> linking node_modules dir"
-ln -sf /var/lib/etherpad/node_modules /srv/www/node_modules
-
-echo "> linking etherpad dir"
-ln -sf /srv/www/src /srv/www/node_modules/ep_etherpad-lite
-
-for CUSTOM in index pad timeslider
-do
-  if [[ ! -f /srv/www/src/static/custom/${CUSTOM}.js ]]
-  then
-    echo "> ensure ${CUSTOM} script"
-    cp /srv/www/src/static/custom/js.template /srv/www/src/static/custom/${CUSTOM}.js
-  fi
-
-  if [[ ! -f /srv/www/src/static/custom/${CUSTOM}.css ]]
-  then
-    echo "> ensure ${CUSTOM} style"
-    cp /srv/www/src/static/custom/css.template /srv/www/src/static/custom/${CUSTOM}.css
-  fi
-done
-
-echo "> chown etherpad files"
-find /srv/www \( \! -user etherpad -o \! -group etherpad \) -print0 | xargs -0 -r chown etherpad:etherpad

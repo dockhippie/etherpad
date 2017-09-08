@@ -2,7 +2,6 @@
   "ip": "0.0.0.0",
   "port": 9001,
 
-  /* "abiword": "/usr/bin/abiword", */
   "soffice": "/usr/bin/soffice",
   "tidyHtml": "/usr/bin/tidy",
 
@@ -57,36 +56,49 @@
   "trustProxy": {{ envBool "TRUST_PROXY" }},
   "disableIPlogging": {{ envBool "DISABLE_IP_LOGGING" }},
 
-
-
-
-
-
-
-
-
-  /* Users for basic authentication. is_admin = true gives access to /admin.
-     If you do not uncomment this, /admin will not be available! */
-  /*
   "users": {
-    "admin": {
-      "password": "changeme1",
+    {{ if ne (envString "USERS_JSON") "" }}{{ envString "USERS_JSON" }},{{ end }}
+
+    {{ if (envBool "LDAP_ENABLED") }}
+      "ldapauth": {
+        "url": "{{ envString "LDAP_URL" }}",
+        "searchDN": "{{ envString "LDAP_SEARCH_DN" }}",
+        "searchPWD": "{{ envString "LDAP_SEARCH_PASSWORD" }}",
+        "accountBase": "{{ envString "LDAP_ACCOUNT_BASE" }}",
+        "accountPattern": "{{ envString "LDAP_ACCOUNT_PATTERN" }}",
+        "displayNameAttribute": "{{ envString "LDAP_DISPLAYNAME_ATTRIBUTE" }}",
+        "groupSearchBase": "{{ envString "LDAP_GROUP_SEARCH_BASE" }}",
+        "groupAttribute": "{{ envString "LDAP_GROUP_ATTRIBUTE" }}",
+        "groupAttributeIsDN": {{ envBool "LDAP_GROUP_ATTRIBUTE_IS_DN" }},
+        "searchScope": "{{ envString "LDAP_SEARCH_SCOPE" }}",
+        "groupSearch": "{{ envString "LDAP_GROUP_SEARCH" }}",
+        "anonymousReadonly": {{ envBool "LDAP_ANONYMOUS_READONLY" }}
+      },
+    {{ end }}
+
+    {{ if (envBool "GITHUB_ENABLED") }}
+      "github": {
+        "appId": "{{ envString "GITHUB_APP_ID" }}",
+        "appSecret": "{{ envString "GITHUB_APP_SECRET" }}",
+        "config": {
+          "organization": "{{ envString "GITHUB_ORGANIZATION" }}",
+          "team": "{{ envString "GITHUB_TEAM" }}",
+          "users": [{{ if ne (envString "GITHUB_USERS") "" }}"{{ join (split (envString "GITHUB_USERS") ",") "\", \"" }}"{{ end }}]
+        }
+      },
+    {{ end }}
+
+    "{{ envString "ADMIN_NAME" }}": {
+      "password": "{{ envString "ADMIN_PASSWORD" }}",
       "is_admin": true
     },
-    "user": {
-      "password": "changeme1",
+    "{{ envString "USER_NAME" }}": {
+      "password": "{{ envString "USER_PASSWORD" }}",
       "is_admin": false
     }
   },
-  */
 
-  // restrict socket.io transport methods
-  "socketTransportProtocols" : ["xhr-polling", "jsonp-polling", "htmlfile"],
-
-
-
-
-
+  "socketTransportProtocols" : ["{{ join (split (envString "SOCKET_TRANSPORT_PROTOCOLS") ",") "\", \"" }}"],
 
   "loadTest": "{{ envBool "LOAD_TEST" }}",
   "indentationOnNewLine": "{{ envBool "INDENTATION_ON_NEW_LINE" }}",

@@ -1,13 +1,9 @@
 #!/bin/bash
+source /usr/bin/entrypoint
 
-if [ -f ./setup ]
+if [ -f ./pre ]
 then
-  source ./setup
-fi
-
-if [ -f ./custom ]
-then
-  source ./custom
+  source ./pre
 fi
 
 if [ -d ./custom.d ]
@@ -16,6 +12,11 @@ then
   do
     source ${FILE}
   done
+fi
+
+if [ -f ./post ]
+then
+  source ./post
 fi
 
 STARTCMD="node node_modules/ep_etherpad-lite/node/server.js"

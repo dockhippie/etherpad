@@ -15,7 +15,7 @@ LABEL org.label-schema.vendor="Thomas Boerger"
 LABEL org.label-schema.schema-version="1.0"
 
 RUN apk update \
-  && apk add abiword libreoffice tidyhtml sqlite \
+  && apk add libreoffice tidyhtml sqlite \
   && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /var/lib/etherpad \

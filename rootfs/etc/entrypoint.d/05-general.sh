@@ -9,39 +9,6 @@ declare -x ETHERPAD_FAVICON
 declare -x ETHERPAD_SHOW_SETTING_IN_ADMIN
 [[ -z "${ETHERPAD_SHOW_SETTING_IN_ADMIN}" ]] && ETHERPAD_SHOW_SETTING_IN_ADMIN="true"
 
-declare -x ETHERPAD_SSL_ENABLED
-[[ -z "${ETHERPAD_SSL_ENABLED}" ]] && ETHERPAD_SSL_ENABLED="false"
-
-declare -x ETHERPAD_SSL_KEY
-[[ -z "${ETHERPAD_SSL_KEY}" ]] && ETHERPAD_SSL_KEY=""
-
-declare -x ETHERPAD_SSL_CERT
-[[ -z "${ETHERPAD_SSL_CERT}" ]] && ETHERPAD_SSL_CERT=""
-
-declare -x ETHERPAD_SSL_CA
-[[ -z "${ETHERPAD_SSL_CA}" ]] && ETHERPAD_SSL_CA=""
-
-declare -x ETHERPAD_DB_TYPE
-[[ -z "${ETHERPAD_DB_TYPE}" ]] && ETHERPAD_DB_TYPE="mysql"
-
-declare -x ETHERPAD_DB_USERNAME
-[[ -z "${ETHERPAD_DB_USERNAME}" ]] && ETHERPAD_DB_USERNAME=""
-
-declare -x ETHERPAD_DB_PASSWORD
-[[ -z "${ETHERPAD_DB_PASSWORD}" ]] && ETHERPAD_DB_PASSWORD=""
-
-declare -x ETHERPAD_DB_HOST
-[[ -z "${ETHERPAD_DB_HOST}" ]] && ETHERPAD_DB_HOST=""
-
-declare -x ETHERPAD_DB_DATABASE
-[[ -z "${ETHERPAD_DB_DATABASE}" ]] && ETHERPAD_DB_DATABASE=""
-
-declare -x ETHERPAD_DB_CHARSET
-[[ -z "${ETHERPAD_DB_CHARSET}" ]] && ETHERPAD_DB_CHARSET="utf8mb4"
-
-declare -x ETHERPAD_DB_FILENAME
-[[ -z "${ETHERPAD_DB_FILENAME}" ]] && ETHERPAD_DB_FILENAME=""
-
 declare -x ETHERPAD_DEFAULT_PAD_TEXT
 [[ -z "${ETHERPAD_DEFAULT_PAD_TEXT}" ]] && ETHERPAD_DEFAULT_PAD_TEXT="Welcome to Etherpad! This pad text is synchronized as you type, so that everyone viewing this page sees the same text. This allows you to collaborate seamlessly on documents!"
 
@@ -111,41 +78,8 @@ declare -x ETHERPAD_TRUST_PROXY
 declare -x ETHERPAD_DISABLE_IP_LOGGING
 [[ -z "${ETHERPAD_DISABLE_IP_LOGGING}" ]] && ETHERPAD_DISABLE_IP_LOGGING="false"
 
-
-
-
-
-
-
-
-
-
-  # /* Users for basic authentication. is_admin = true gives access to /admin.
-  #    If you do not uncomment this, /admin will not be available! */
-  # /*
-  # "users": {
-  #   "admin": {
-  #     "password": "changeme1",
-  #     "is_admin": true
-  #   },
-  #   "user": {
-  #     "password": "changeme1",
-  #     "is_admin": false
-  #   }
-  # },
-  # */
-
-  # // restrict socket.io transport methods
-  # "socketTransportProtocols" : ["xhr-polling", "jsonp-polling", "htmlfile"],
-
-
-
-
-
-
-
-
-
+declare -x ETHERPAD_SOCKET_TRANSPORT_PROTOCOLS
+[[ -z "${ETHERPAD_SOCKET_TRANSPORT_PROTOCOLS}" ]] && ETHERPAD_SOCKET_TRANSPORT_PROTOCOLS="xhr-polling,jsonp-polling,htmlfile"
 
 declare -x ETHERPAD_LOAD_TEST
 [[ -z "${ETHERPAD_LOAD_TEST}" ]] && ETHERPAD_LOAD_TEST="false"
@@ -155,38 +89,3 @@ declare -x ETHERPAD_INDENTATION_ON_NEW_LINE
 
 declare -x ETHERPAD_LOG_LEVEL
 [[ -z "${ETHERPAD_LOG_LEVEL}" ]] && ETHERPAD_LOG_LEVEL="INFO"
-
-case "${ETHERPAD_DB_TYPE}" in
-  "sqlite")
-    declare -x ETHERPAD_DB_FILENAME
-    [[ -z "${ETHERPAD_DB_FILENAME}" ]] && ETHERPAD_DB_FILENAME="/var/lib/etherpad/database.sqlite3"
-    ;;
-
-  "mysql")
-    declare -x ETHERPAD_DB_HOST
-    [[ -z "${ETHERPAD_DB_HOST}" ]] && ETHERPAD_DB_HOST="mysql"
-
-    declare -x ETHERPAD_DB_DATABASE
-    [[ -z "${ETHERPAD_DB_DATABASE}" ]] && ETHERPAD_DB_DATABASE="etherpad"
-
-    declare -x ETHERPAD_DB_USERNAME
-    [[ -z "${ETHERPAD_DB_USERNAME}" ]] && ETHERPAD_DB_USERNAME="root"
-
-    declare -x ETHERPAD_DB_PASSWORD
-    [[ -z "${ETHERPAD_DB_PASSWORD}" ]] && ETHERPAD_DB_PASSWORD="root"
-    ;;
-
-  "postgres")
-    declare -x ETHERPAD_DB_HOST
-    [[ -z "${ETHERPAD_DB_HOST}" ]] && ETHERPAD_DB_HOST="postgres"
-
-    declare -x ETHERPAD_DB_DATABASE
-    [[ -z "${ETHERPAD_DB_DATABASE}" ]] && ETHERPAD_DB_DATABASE="etherpad"
-
-    declare -x ETHERPAD_DB_USERNAME
-    [[ -z "${ETHERPAD_DB_USERNAME}" ]] && ETHERPAD_DB_USERNAME="postgres"
-
-    declare -x ETHERPAD_DB_PASSWORD
-    [[ -z "${ETHERPAD_DB_PASSWORD}" ]] && ETHERPAD_DB_PASSWORD="postgres"
-    ;;
-esac
