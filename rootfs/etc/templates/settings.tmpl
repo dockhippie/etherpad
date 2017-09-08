@@ -1,0 +1,102 @@
+{
+  "ip": "0.0.0.0",
+  "port": 9001,
+
+  /* "abiword": "/usr/bin/abiword", */
+  "soffice": "/usr/bin/soffice",
+  "tidyHtml": "/usr/bin/tidy",
+
+  "title": "{{ envString "TITLE" }}",
+  "favicon": "{{ envString "FAVICON" }}",
+
+  "showSettingsInAdminPage": {{ envBool "SHOW_SETTING_IN_ADMIN" }},
+
+  {{ if (envBool "SSL_ENABLED") }}
+    "ssl": {
+      "key": "{{ envString "SSL_KEY" }}",
+      "cert": "{{ envString "SSL_CERT" }}",
+      "ca": [{{ if ne (envString "SSL_CA") "" }}"{{ envString "SSL_CA" }}"{{ end }}]
+    },
+  {{ end }}
+
+  "dbType": "{{ envString "DB_TYPE" }}",
+  "dbSettings" : {
+    "user": "{{ envString "DB_USERNAME" }}",
+    "password": "{{ envString "DB_PASSWORD" }}",
+    "host": "{{ envString "DB_HOST" }}",
+    "database": "{{ envString "DB_DATABASE" }}",
+    "charset": "{{ envString "DB_CHARSET" }}",
+    "filename": "{{ envString "DB_FILENAME" }}"
+  },
+
+  "defaultPadText": "{{ envString "DEFAULT_PAD_TEXT" }}",
+
+  "padOptions": {
+    "noColors": {{ envBool "PAD_OPTIONS_NO_COLORS" }},
+    "showControls": {{ envBool "PAD_OPTIONS_SHOW_CONTROLS" }},
+    "showChat": {{ envBool "PAD_OPTIONS_SHOW_CHAT" }},
+    "showLineNumbers": {{ envBool "PAD_OPTIONS_SHOW_LINE_NUMBERS" }},
+    "useMonospaceFont": {{ envBool "PAD_OPTIONS_USE_MONOSPACE_FONT" }},
+    "userName": {{ envBool "PAD_OPTIONS_USERNAME" }},
+    "userColor": {{ envBool "PAD_OPTIONS_USERCOLOR" }},
+    "rtl": {{ envBool "PAD_OPTIONS_RTL" }},
+    "alwaysShowChat": {{ envBool "PAD_OPTIONS_ALWAYS_SHOW_CHAT" }},
+    "chatAndUsers": {{ envBool "PAD_OPTIONS_CHAT_AND_USERS" }},
+    "lang": "{{ envString "PAD_OPTIONS_LANG" }}"
+  },
+
+  "suppressErrorsInPadText": {{ envBool "SUPPRESS_ERRORS_IN_PAD_TEXT" }},
+  "requireSession": {{ envBool "REQUIRE_SESSION" }},
+  "editOnly": {{ envBool "EDIT_ONLY" }},
+  "sessionNoPassword": {{ envBool "SESSION_NO_PASSWORD" }},
+  "minify": {{ envBool "MINIFY" }},
+  "maxAge": {{ envInt "MAX_AGE" }},
+  "allowUnknownFileEnds": {{ envBool "ALLOW_UNKNOWN_FILE_ENDS" }},
+  "requireAuthentication": {{ envBool "REQUIRE_AUTHENTICATION" }},
+  "requireAuthorization": {{ envBool "REQUIRE_AUTHORIZATION" }},
+  "trustProxy": {{ envBool "TRUST_PROXY" }},
+  "disableIPlogging": {{ envBool "DISABLE_IP_LOGGING" }},
+
+
+
+
+
+
+
+
+
+  /* Users for basic authentication. is_admin = true gives access to /admin.
+     If you do not uncomment this, /admin will not be available! */
+  /*
+  "users": {
+    "admin": {
+      "password": "changeme1",
+      "is_admin": true
+    },
+    "user": {
+      "password": "changeme1",
+      "is_admin": false
+    }
+  },
+  */
+
+  // restrict socket.io transport methods
+  "socketTransportProtocols" : ["xhr-polling", "jsonp-polling", "htmlfile"],
+
+
+
+
+
+
+  "loadTest": "{{ envBool "LOAD_TEST" }}",
+  "indentationOnNewLine": "{{ envBool "INDENTATION_ON_NEW_LINE" }}",
+  "loglevel": "{{ envString "LOG_LEVEL" }}",
+
+  "logconfig": {
+    "appenders": [
+      {
+        "type": "console"
+      }
+    ]
+  }
+}

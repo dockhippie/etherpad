@@ -1,0 +1,90 @@
+#!/bin/bash
+source /usr/bin/entrypoint
+
+echo "> chown etherpad home"
+find /var/lib/etherpad \( \! -user etherpad -o \! -group etherpad \) -print0 | xargs -0 -r chown etherpad:etherpad
+
+case "${ETHERPAD_DB_TYPE}" in
+  "sqlite")
+    if [ -z "${ETHERPAD_DB_FILENAME}" ]
+    then
+      echo >&2 "Error: You have to provide ETHERPAD_DB_FILENAME environment variable"
+      /bin/s6-svscanctl -t /etc/s6
+      exit 1
+    fi
+
+    if [ ! -f "${ETHERPAD_DB_FILENAME}" ]
+    then
+      echo "> creating empty database"
+      su-exec etherpad /usr/bin/sqlite3 ${ETHERPAD_DB_FILENAME} ""
+    fi
+    ;;
+
+  "mysql")
+    if [ -z "${ETHERPAD_DB_USERNAME}" ]
+    then
+      echo >&2 "Error: You have to provide ETHERPAD_DB_USERNAME environment variable"
+      /bin/s6-svscanctl -t /etc/s6
+      exit 1
+    fi
+
+    if [ -z "${ETHERPAD_DB_PASSWORD}" ]
+    then
+      echo >&2 "Error: You have to provide ETHERPAD_DB_PASSWORD environment variable"
+      /bin/s6-svscanctl -t /etc/s6
+      exit 1
+    fi
+    ;;
+
+  "postgres")
+    if [ -z "${ETHERPAD_DB_USERNAME}" ]
+    then
+      echo >&2 "Error: You have to provide ETHERPAD_DB_USERNAME environment variable"
+      /bin/s6-svscanctl -t /etc/s6
+      exit 1
+    fi
+
+    if [ -z "${ETHERPAD_DB_PASSWORD}" ]
+    then
+      echo >&2 "Error: You have to provide ETHERPAD_DB_PASSWORD environment variable"
+      /bin/s6-svscanctl -t /etc/s6
+      exit 1
+    fi
+    ;;
+esac
+
+echo "> writing etherpad config"
+/usr/bin/templater -d -p etherpad -o /srv/www/settings.json /etc/templates/settings.tmpl
+
+if [[ $? -ne 0 ]]
+then
+  /bin/s6-svscanctl -t /etc/s6
+  exit 1
+fi
+
+echo "> creating node_modules dir"
+mkdir -p /var/lib/etherpad/node_modules
+
+echo "> linking node_modules dir"
+ln -sf /var/lib/etherpad/node_modules /srv/www/node_modules
+
+echo "> linking etherpad dir"
+ln -sf /srv/www/src /srv/www/node_modules/ep_etherpad-lite
+
+for CUSTOM in index pad timeslider
+do
+  if [[ ! -f /srv/www/src/static/custom/${CUSTOM}.js ]]
+  then
+    echo "> ensure ${CUSTOM} script"
+    cp /srv/www/src/static/custom/js.template /srv/www/src/static/custom/${CUSTOM}.js
+  fi
+
+  if [[ ! -f /srv/www/src/static/custom/${CUSTOM}.css ]]
+  then
+    echo "> ensure ${CUSTOM} style"
+    cp /srv/www/src/static/custom/css.template /srv/www/src/static/custom/${CUSTOM}.css
+  fi
+done
+
+echo "> chown etherpad files"
+find /srv/www \( \! -user etherpad -o \! -group etherpad \) -print0 | xargs -0 -r chown etherpad:etherpad

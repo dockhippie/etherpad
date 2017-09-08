@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ -f ./setup ]
+then
+  source ./setup
+fi
+
+if [ -f ./custom ]
+then
+  source ./custom
+fi
+
+if [ -d ./custom.d ]
+then
+  for FILE in $(find ./custom.d -type f -iname *.sh | sort)
+  do
+    source ${FILE}
+  done
+fi
+
+STARTCMD="node node_modules/ep_etherpad-lite/node/server.js"
+
+pushd /srv/www > /dev/null
+  echo "> starting etherpad service"
+  exec su-exec etherpad ${STARTCMD}
+popd > /dev/null
