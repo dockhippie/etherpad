@@ -59,23 +59,6 @@
   "users": {
     {{ if ne (envString "USERS_JSON") "" }}{{ envString "USERS_JSON" }},{{ end }}
 
-    {{ if (envBool "LDAP_ENABLED") }}
-      "ldapauth": {
-        "url": "{{ envString "LDAP_URL" }}",
-        "searchDN": "{{ envString "LDAP_SEARCH_DN" }}",
-        "searchPWD": "{{ envString "LDAP_SEARCH_PASSWORD" }}",
-        "accountBase": "{{ envString "LDAP_ACCOUNT_BASE" }}",
-        "accountPattern": "{{ envString "LDAP_ACCOUNT_PATTERN" }}",
-        "displayNameAttribute": "{{ envString "LDAP_DISPLAYNAME_ATTRIBUTE" }}",
-        "groupSearchBase": "{{ envString "LDAP_GROUP_SEARCH_BASE" }}",
-        "groupAttribute": "{{ envString "LDAP_GROUP_ATTRIBUTE" }}",
-        "groupAttributeIsDN": {{ envBool "LDAP_GROUP_ATTRIBUTE_IS_DN" }},
-        "searchScope": "{{ envString "LDAP_SEARCH_SCOPE" }}",
-        "groupSearch": "{{ envString "LDAP_GROUP_SEARCH" }}",
-        "anonymousReadonly": {{ envBool "LDAP_ANONYMOUS_READONLY" }}
-      },
-    {{ end }}
-
     {{ if (envBool "GITHUB_ENABLED") }}
       "github": {
         "appId": "{{ envString "GITHUB_APP_ID" }}",
