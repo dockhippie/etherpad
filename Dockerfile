@@ -1,4 +1,4 @@
-FROM webhippie/nodejs:latest@sha256:eebb471966e2344c6958f267dd2f60cf43f2c8297e3056e5b37ab23e7d20106f
+FROM webhippie/nodejs:latest@sha256:69137cb7e3fba3b1a697b938f584b3f5756b7462c99ac248ccbd3759aa7e2ecd
 MAINTAINER Thomas Boerger <thomas@webhippie.de>
 
 VOLUME ["/var/lib/etherpad"]
